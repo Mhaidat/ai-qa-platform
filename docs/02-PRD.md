@@ -24,6 +24,20 @@ This workflow ensures quality, traceability, and human validation before automat
 
 ---
 
+## Problem Statement
+
+Software development teams often face challenges throughout the QA lifecycle:
+
+- Requirements may contain gaps or ambiguous information.
+- Manual test case creation is repetitive and time-consuming.
+- Manual QA and Automation QA work is disconnected.
+- Traceability between requirements, test cases, and automation is difficult to maintain.
+- Generating automation scripts manually consumes significant engineering effort.
+
+The platform addresses these challenges by introducing AI-assisted workflows while keeping humans responsible for review and approval.
+
+
+
 ## 2. Product Goals
 
 The MVP aims to achieve the following goals:
