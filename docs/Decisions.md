@@ -1,57 +1,35 @@
-# Decision 001
+# Decisions
 
-## Title
+## Decision 001 - Jira Synchronization Strategy
 
-Jira Synchronization Strategy
+Jira synchronization will be manual and initiated by the user.
 
-## Decision
-
-The platform will not automatically synchronize changes from Jira.
-
-Synchronization will always be initiated manually by the user.
-
-## Reason
-
+Reason:
 Automatic synchronization may overwrite reviewed requirements, approved test cases, or generated automation.
 
-Manual synchronization allows users to review incoming changes before applying them.
+---
 
-## Result
+## Decision 002 - Organization Registration
 
-Users remain in control of their work while maintaining traceability with Jira.
+The first user who registers creates an Organization and becomes the Organization Owner/Admin.
 
+Admins can invite employees and assign roles.
 
-# Decision 002
+---
 
-User signs up → creates Organization → becomes Owner/Admin.
-Admin invites employees.
-Employees do not create companies unless they sign up independently.
-All Projects belong to an Organization.
-Users access Projects only if invited.
+## Decision 003 - Flexible Project Structure
 
-# Decision 003
-The platform will not enforce a specific project management methodology (Scrum, Kanban, etc.).
+The platform will not enforce Scrum or any specific methodology.
+
 Stories are the core entity.
-Releases, Sprints, and Epics are optional organizational structures.
 
+Epics, Releases, and Sprints are optional.
 
+---
 
-# Decision 004
+## Decision 004 - Database Technology
 
-## Title
+The MVP will use PostgreSQL with pgvector.
 
-Database Technology Selection
-
-## Decision
-
-The MVP will use PostgreSQL as the primary database and pgvector for storing and searching AI embeddings.
-
-## Reason
-
-PostgreSQL is suitable for SaaS applications, cost-effective, scalable, and supports relational data well.
-
-pgvector allows the platform to store embeddings inside PostgreSQL without introducing a separate vector database in the MVP.
-
-## Result
-
-The platform will use one database technology in the MVP while still supporting future AI Knowledge Base and RAG capabilities.
+Reason:
+PostgreSQL supports relational SaaS data, and pgvector supports embeddings for the Knowledge Base.
