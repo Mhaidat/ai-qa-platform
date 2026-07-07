@@ -1,29 +1,27 @@
 # Domain Model
 
-Organization
+## Core Entities
 
-User
+- Organization
+- User
+- Invitation
+- Project
+- Story
+- Story Comment
+- Story Attachment
+- Knowledge Item
+- AI Analysis
+- Test Case
+- Test Step
+- Jira Integration
+- Jira Link
+- Automation Generation
 
-Invitation
+## Optional / Future Entities
 
-Subscription
-
-Project
-
-Story
-
-Story Comment
-
-Story Attachment
-
-Knowledge Item
-
-AI Analysis
-
-Test Case
-
-Test Step
-
-Jira Integration
-
-Automation Generation
+- Subscription
+- Epic
+- Sprint
+- Release
+- AI Settings
+- Audit Log
