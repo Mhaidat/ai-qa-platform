@@ -45,3 +45,9 @@ This allows the platform to understand project context, detect conflicts across 
 
 Result:
 Stories, AI Analysis, Test Cases, and Automation will all depend on project knowledge instead of working in isolation.
+
+## Decision 006
+
+Knowledge Base is not a stored entity.
+
+It is a logical view built from Knowledge Items extracted from Stories.
