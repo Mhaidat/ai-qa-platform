@@ -33,3 +33,25 @@ Users access Projects only if invited.
 The platform will not enforce a specific project management methodology (Scrum, Kanban, etc.).
 Stories are the core entity.
 Releases, Sprints, and Epics are optional organizational structures.
+
+
+
+# Decision 004
+
+## Title
+
+Database Technology Selection
+
+## Decision
+
+The MVP will use PostgreSQL as the primary database and pgvector for storing and searching AI embeddings.
+
+## Reason
+
+PostgreSQL is suitable for SaaS applications, cost-effective, scalable, and supports relational data well.
+
+pgvector allows the platform to store embeddings inside PostgreSQL without introducing a separate vector database in the MVP.
+
+## Result
+
+The platform will use one database technology in the MVP while still supporting future AI Knowledge Base and RAG capabilities.
