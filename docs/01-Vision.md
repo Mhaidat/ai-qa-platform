@@ -98,3 +98,9 @@ The platform succeeds when it helps QA teams:
 * Build project knowledge before generating outputs.
 * Focus on solving real QA problems.
 * Every feature must provide measurable value to QA teams.
+
+
+## Core Philosophy
+
+* The platform is built around project knowledge, not around AI generation only.
+* AI is used as a tool to build, analyze, and enrich project knowledge, while the Knowledge Base remains the core value of the platform.
