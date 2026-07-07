@@ -38,6 +38,7 @@ The platform addresses these challenges by introducing AI-assisted workflows whi
 
 
 
+
 ## 2. Product Goals
 
 The MVP aims to achieve the following goals:
@@ -50,3 +51,195 @@ The MVP aims to achieve the following goals:
 - Integrate with Jira for traceability.
 - Keep humans responsible for review and approval at every stage.
 - Build the foundation for a future AI-powered QA Platform.
+
+
+
+
+## 3. Product Modules
+
+The AI QA Platform is organized into independent modules. Each module is responsible for a specific part of the software testing lifecycle and can evolve independently while remaining integrated with the rest of the platform.
+
+### 3.1 Identity & Organization
+
+Responsible for organization management, user authentication, authorization, invitations, and role management.
+
+Main responsibilities:
+
+* Organization registration
+* User authentication
+* Team member invitations
+* Role management
+* Organization settings
+
+Roles supported in the MVP:
+
+* Administrator
+* Business Analyst
+* Manual QA Engineer
+* Automation QA Engineer
+
+---
+
+### 3.2 Project Management
+
+Responsible for managing software projects and importing requirements from external systems.
+
+Main responsibilities:
+
+* Create Projects
+* Connect to Jira
+* Import Stories
+* Create Stories manually
+* Organize project requirements
+
+Stories are the core business entity of the platform.
+
+Epics, Releases, and Sprints are optional organizational structures and should not be mandatory.
+
+---
+
+### 3.3 Knowledge Module
+
+Responsible for building and maintaining the project's knowledge base.
+
+The purpose of this module is to help Business Analysts understand the project before test design begins.
+
+Initial MVP capabilities:
+
+* AI Requirement Analysis
+* Business Rule Extraction
+* Gap Detection
+* Ambiguity Detection
+* Suggested Acceptance Criteria
+* Business Conflict Detection
+
+The Knowledge Base is visible to users and serves as a shared understanding of the project rather than being an internal AI component only.
+
+---
+
+### 3.4 Manual Testing Module
+
+Responsible for manual test design and review.
+
+Main responsibilities:
+
+* Generate AI Test Cases
+* Review generated test cases
+* Edit test cases
+* Delete test cases
+* Create manual test cases
+* Approve test cases
+
+Human review is mandatory before any test case is considered approved.
+
+---
+
+### 3.5 Jira Integration
+
+Responsible for synchronization between the platform and Jira.
+
+Main responsibilities:
+
+* Connect Jira projects
+* Import Stories
+* Link Test Cases
+* Synchronize manually with Jira
+
+Synchronization is always initiated by the user to prevent overwriting reviewed work.
+
+---
+
+### 3.6 Automation Module
+
+Responsible for generating automation code from approved test cases.
+
+Main responsibilities:
+
+* Select approved test cases
+* Generate Playwright TypeScript automation
+* Generate Page Object Model
+* Generate assertions
+* Download automation project
+
+Automation generation is available only for approved test cases.
+
+---
+
+### 3.7 AI Engine
+
+Responsible for all AI-related capabilities used across the platform.
+
+Responsibilities include:
+
+* Prompt Management
+* AI Model Integration
+* Embedding Generation
+* Semantic Search
+* Retrieval-Augmented Generation (RAG)
+* AI Response Validation
+
+The AI Engine assists users but never replaces human decisions.
+
+---
+
+### 3.8 Administration
+
+Responsible for platform administration.
+
+Main responsibilities:
+
+* User Management
+* Organization Settings
+* AI Configuration
+* Prompt Templates
+* System Configuration
+
+---
+
+### 3.9 Reporting (Future Release)
+
+This module is outside the MVP scope and will be introduced in future releases.
+
+Planned capabilities include:
+
+* Requirement Coverage
+* Test Coverage
+* Automation Coverage
+* Team Productivity
+* AI Usage Analytics
+* Quality Metrics
+
+---
+
+## Module Interaction
+
+The expected workflow between the core modules is as follows:
+
+Organization
+
+↓
+
+Project
+
+↓
+
+Stories
+
+↓
+
+Knowledge Analysis
+
+↓
+
+Manual Test Design
+
+↓
+
+Jira Synchronization
+
+↓
+
+Automation Generation
+
+This workflow represents the primary business process of the MVP and defines the expected lifecycle of requirements as they progress from business analysis to automation.
+
