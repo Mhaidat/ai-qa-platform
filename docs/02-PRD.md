@@ -100,20 +100,28 @@ Epics, Releases, and Sprints are optional organizational structures and should n
 
 ### 3.3 Knowledge Module
 
-Responsible for building and maintaining the project's knowledge base.
+The Knowledge Module is the intelligence layer of the AI QA Platform and represents the core value of the product.
 
-The purpose of this module is to help Business Analysts understand the project before test design begins.
+Its primary responsibility is to build, maintain, and continuously enrich the project's Knowledge Base by analyzing all available project requirements rather than treating each Story as an isolated document.
 
-Initial MVP capabilities:
+The Knowledge Base provides a shared understanding of the project for Business Analysts, Manual QA Engineers, and Automation QA Engineers, enabling AI to generate more accurate and context-aware outputs.
+
+#### MVP Capabilities
 
 * AI Requirement Analysis
 * Business Rule Extraction
 * Gap Detection
 * Ambiguity Detection
 * Suggested Acceptance Criteria
-* Business Conflict Detection
+* Basic Cross-Story Conflict Detection
+* Related Story Detection
+* Project Knowledge Visualization
 
-The Knowledge Base is visible to users and serves as a shared understanding of the project rather than being an internal AI component only.
+The Knowledge Base is fully visible to users and can be reviewed before any AI-generated output is accepted.
+
+It serves as the central source of project knowledge and is used to support requirement analysis, test case generation, and automation generation.
+
+AI is responsible for building and enriching the Knowledge Base, while all final decisions remain under human control.
 
 ---
 
