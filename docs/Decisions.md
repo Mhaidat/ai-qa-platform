@@ -28,3 +28,8 @@ Admin invites employees.
 Employees do not create companies unless they sign up independently.
 All Projects belong to an Organization.
 Users access Projects only if invited.
+
+# Decision 003
+The platform will not enforce a specific project management methodology (Scrum, Kanban, etc.).
+Stories are the core entity.
+Releases, Sprints, and Epics are optional organizational structures.
