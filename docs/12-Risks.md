@@ -1,248 +1,211 @@
 # Risk Register
 
-This document tracks technical, business, security, AI, and operational risks that may affect the AI QA Platform.
+This document tracks the major risks that could impact the successful development and adoption of the AI QA Platform.
 
-Each risk includes:
+---
 
-- Description
-- Impact
-- Probability
-- Mitigation
-- Status
+## Risk-001
 
-# Risk-001
-
-Title
+### Title
 
 High AI Token Cost
 
-Description
+### Description
 
-Sending complete project requirements to the LLM may become expensive as projects grow.
+Analyzing large projects may require a significant number of AI tokens, increasing operational costs.
 
-Impact
-
-High
-
-Probability
+### Impact
 
 High
 
-Mitigation
+### Probability
 
-Use RAG.
+High
 
-Use Embeddings.
+### Mitigation
 
-Use Vector Database.
+* Use Embeddings.
+* Use Retrieval-Augmented Generation (RAG).
+* Send only relevant project context.
+* Cache AI responses when possible.
 
-Send only relevant context.
-
-Status
+### Status
 
 Open
 
+---
 
-# Risk-002
+## Risk-002
 
-Title
+### Title
 
 AI Hallucination
 
-Description
+### Description
 
-The AI may generate business rules or test cases that are not supported by the requirement.
+The AI may generate incorrect business rules, acceptance criteria, or test cases.
 
-Impact
+### Impact
 
 High
 
-Probability
+### Probability
 
 Medium
 
-Mitigation
+### Mitigation
 
-Human review is mandatory.
+* Human review is mandatory.
+* AI output is never auto-approved.
+* Users can edit every AI-generated artifact.
 
-AI suggestions are never auto-approved.
-
-Status
+### Status
 
 Open
 
+---
 
-# Risk-003
+## Risk-003
 
-Title
+### Title
 
 Business Rule Conflicts
 
-Description
+### Description
 
-Different user stories may contain contradictory business rules.
+Different Stories may contain contradictory business rules.
 
-Example:
-
-Story A:
-Registration uses Email only.
-
-Story B:
-Send SMS after registration.
-
-Impact
+### Impact
 
 High
 
-Probability
+### Probability
 
 High
 
-Mitigation
+### Mitigation
 
-Create a project Knowledge Base.
+* Build and maintain a Project Knowledge Base.
+* Detect related Stories.
+* Run cross-Story conflict analysis.
 
-Use semantic search before AI generation.
-
-Detect conflicting business rules.
-
-Status
+### Status
 
 Open
 
+---
 
-# Risk-003
+## Risk-004
 
-Title
-
-Business Rule Conflicts
-
-Description
-
-Different user stories may contain contradictory business rules.
-
-Example:
-
-Story A:
-Registration uses Email only.
-
-Story B:
-Send SMS after registration.
-
-Impact
-
-High
-
-Probability
-
-High
-
-Mitigation
-
-Create a project Knowledge Base.
-
-Use semantic search before AI generation.
-
-Detect conflicting business rules.
-
-Status
-
-Open
-
-# Risk-004
-
-Title
+### Title
 
 Requirement Changes
 
-Description
+### Description
 
-Approved requirements may change after test cases and automation have already been generated.
+Requirements may change after test cases or automation have already been generated.
 
-Impact
-
-High
-
-Probability
+### Impact
 
 High
 
-Mitigation
+### Probability
 
-Manual Jira synchronization.
+High
 
-Versioning.
+### Mitigation
 
-Impact Analysis.
+* Manual Jira synchronization.
+* Story versioning (future release).
+* Notify users about detected changes.
 
-Status
+### Status
 
 Open
 
+---
 
-# Risk-005
+## Risk-005
 
-Title
-
-Large Prompt Size
-
-Description
-
-Large prompts increase latency, token cost, and may exceed model context limits.
-
-Impact
-
-High
-
-Probability
-
-High
-
-Mitigation
-
-Chunking.
-
-RAG.
-
-Summaries.
-
-Business Rule extraction.
-
-Status
-
-Open
-
-
-# Risk-006
-
-Title
+### Title
 
 Vendor Lock-in
 
-Description
+### Description
 
-The platform depends on a single AI provider.
+Depending on a single AI provider may limit flexibility and increase long-term costs.
 
-Impact
-
-Medium
-
-Probability
+### Impact
 
 Medium
 
-Mitigation
+### Probability
 
-Support multiple LLM providers.
+Medium
 
-OpenAI
+### Mitigation
 
-Azure OpenAI
+Design the AI layer using provider abstraction to support multiple LLM providers in future releases.
 
-Anthropic
+### Status
 
-Local Models
+Open
 
-Status
+---
+
+## Risk-006
+
+### Title
+
+Poor Requirement Quality
+
+### Description
+
+AI output quality depends on the quality of the input requirements.
+
+### Impact
+
+High
+
+### Probability
+
+High
+
+### Mitigation
+
+Improve requirement quality through the Knowledge Module before generating test cases.
+
+### Status
+
+Open
+
+---
+
+## Risk-007
+
+### Title
+
+Scalability of the Knowledge Base
+
+### Description
+
+Large projects may contain thousands of Stories, making semantic search slower and increasing storage requirements.
+
+### Impact
+
+Medium
+
+### Probability
+
+Medium
+
+### Mitigation
+
+* Use pgvector for embeddings.
+* Index embeddings efficiently.
+* Retrieve only the top relevant Stories.
+* Archive inactive projects when appropriate.
+
+### Status
 
 Open
