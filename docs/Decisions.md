@@ -33,3 +33,15 @@ The MVP will use PostgreSQL with pgvector.
 
 Reason:
 PostgreSQL supports relational SaaS data, and pgvector supports embeddings for the Knowledge Base.
+
+## Decision 005 - Knowledge-Centered Architecture
+
+The platform will be designed around a Project Knowledge Base rather than isolated AI prompts.
+
+AI will be used to build and enrich project knowledge, but the Knowledge Base will remain the central product value.
+
+Reason:
+This allows the platform to understand project context, detect conflicts across Stories, reduce prompt size, reduce AI cost, and improve output quality.
+
+Result:
+Stories, AI Analysis, Test Cases, and Automation will all depend on project knowledge instead of working in isolation.
