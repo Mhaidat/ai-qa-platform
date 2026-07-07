@@ -1,183 +1,178 @@
 # Product Requirements Document (PRD)
 
-## 1. Introduction
+# AI QA Platform
 
-### Product Name
+Version: 1.0
+
+Status: Draft (MVP)
+
+---
+
+# 1. Introduction
+
+## Product Name
 
 AI QA Platform
 
-### Purpose
+## Purpose
 
-The AI QA Platform is a SaaS application designed to help software quality assurance teams reduce the effort required to transform software requirements into reviewed manual test cases and production-ready Playwright automation code.
+The AI QA Platform is a SaaS application that helps software teams understand project requirements, build a shared project knowledge base, generate high-quality manual test cases, and produce production-ready Playwright automation while keeping humans in control throughout the QA lifecycle.
 
-Unlike traditional AI generators, the platform keeps humans in the review process while accelerating repetitive QA activities.
+Unlike traditional AI generators, the platform does not simply generate outputs from isolated requirements. Instead, it builds a living Knowledge Base for each project that enables AI to understand the project context before generating test cases or automation.
 
-The platform follows a role-based workflow where each team member contributes according to their responsibility.
-
-Business Analysts prepare and approve requirements.
-
-Manual QA Engineers generate and review manual test cases.
-
-Automation QA Engineers generate Playwright automation from approved test cases.
-
-This workflow ensures quality, traceability, and human validation before automation is generated.
+The platform follows a structured workflow where Business Analysts, Manual QA Engineers, and Automation QA Engineers collaborate through clearly defined stages while maintaining full traceability and human validation.
 
 ---
 
-## Problem Statement
+# 2. Problem Statement
 
-Software development teams often face challenges throughout the QA lifecycle:
+Software development teams often face several challenges throughout the QA lifecycle:
 
-- Requirements may contain gaps or ambiguous information.
-- Manual test case creation is repetitive and time-consuming.
-- Manual QA and Automation QA work is disconnected.
-- Traceability between requirements, test cases, and automation is difficult to maintain.
-- Generating automation scripts manually consumes significant engineering effort.
+* Requirements may contain gaps or ambiguous information.
+* Business rules may be inconsistent across multiple user stories.
+* Manual test case creation is repetitive and time-consuming.
+* Manual QA and Automation QA work is disconnected.
+* Traceability between requirements, test cases, Jira, and automation is difficult to maintain.
+* Automation engineers spend significant effort converting approved test cases into automation scripts.
+* Existing AI tools typically analyze a single requirement without understanding the entire project.
 
-The platform addresses these challenges by introducing AI-assisted workflows while keeping humans responsible for review and approval.
+The AI QA Platform addresses these challenges by introducing AI-assisted workflows centered around a project Knowledge Base while keeping humans responsible for every approval.
 
+---
 
-
-
-## 2. Product Goals
+# 3. Product Goals
 
 The MVP aims to achieve the following goals:
 
-- Reduce the time required to create manual test cases.
-- Reduce repetitive work for QA Engineers.
-- Improve requirement quality by helping Business Analysts identify missing or unclear information before test design.
-- Standardize test case quality across QA teams.
-- Generate Playwright automation from approved test cases.
-- Integrate with Jira for traceability.
-- Keep humans responsible for review and approval at every stage.
-- Build the foundation for a future AI-powered QA Platform.
-
-
-
-
-## 3. Product Modules
-
-The AI QA Platform is organized into independent modules. Each module is responsible for a specific part of the software testing lifecycle and can evolve independently while remaining integrated with the rest of the platform.
-
-### 3.1 Identity & Organization
-
-Responsible for organization management, user authentication, authorization, invitations, and role management.
-
-Main responsibilities:
-
-* Organization registration
-* User authentication
-* Team member invitations
-* Role management
-* Organization settings
-
-Roles supported in the MVP:
-
-* Administrator
-* Business Analyst
-* Manual QA Engineer
-* Automation QA Engineer
+* Reduce manual test case creation time.
+* Reduce repetitive work for QA Engineers.
+* Improve requirement quality before testing begins.
+* Help Business Analysts identify missing or ambiguous requirements.
+* Detect basic business conflicts across related Stories.
+* Standardize test case quality.
+* Generate Playwright TypeScript automation from approved test cases.
+* Integrate with Jira while preserving traceability.
+* Keep humans responsible for every approval.
+* Establish the foundation for a complete AI-powered QA Platform.
 
 ---
 
-### 3.2 Project Management
+# 4. Target Users
 
-Responsible for managing software projects and importing requirements from external systems.
+* Business Analyst
+* Manual QA Engineer
+* Automation QA Engineer
+* QA Lead
+* Organization Administrator
 
-Main responsibilities:
+---
+
+# 5. Product Modules
+
+The AI QA Platform is organized into independent modules. Each module represents a business capability and can evolve independently while remaining integrated with the overall platform.
+
+---
+
+## 5.1 Identity & Organization
+
+Responsible for:
+
+* Organization registration
+* User authentication
+* User authorization
+* Team invitations
+* Team management
+* Role management
+* Organization settings
+
+---
+
+## 5.2 Project Management
+
+Responsible for:
 
 * Create Projects
-* Connect to Jira
+* Connect Jira
 * Import Stories
 * Create Stories manually
 * Organize project requirements
 
-Stories are the core business entity of the platform.
+Stories are the primary business entity.
 
-Epics, Releases, and Sprints are optional organizational structures and should not be mandatory.
+Epics, Releases, and Sprints are optional organizational structures.
 
 ---
 
-### 3.3 Knowledge Module
+## 5.3 Knowledge Module
 
 The Knowledge Module is the intelligence layer of the AI QA Platform and represents the core value of the product.
 
-Its primary responsibility is to build, maintain, and continuously enrich the project's Knowledge Base by analyzing all available project requirements rather than treating each Story as an isolated document.
+Its responsibility is to continuously build, maintain, and enrich the project's Knowledge Base.
 
-The Knowledge Base provides a shared understanding of the project for Business Analysts, Manual QA Engineers, and Automation QA Engineers, enabling AI to generate more accurate and context-aware outputs.
+Instead of analyzing Stories independently, the platform understands the project as a whole.
 
-#### MVP Capabilities
+### MVP Capabilities
 
 * AI Requirement Analysis
 * Business Rule Extraction
 * Gap Detection
 * Ambiguity Detection
 * Suggested Acceptance Criteria
-* Basic Cross-Story Conflict Detection
 * Related Story Detection
+* Basic Cross-Story Conflict Detection
 * Project Knowledge Visualization
 
-The Knowledge Base is fully visible to users and can be reviewed before any AI-generated output is accepted.
+The Knowledge Base is visible to users.
 
-It serves as the central source of project knowledge and is used to support requirement analysis, test case generation, and automation generation.
-
-AI is responsible for building and enriching the Knowledge Base, while all final decisions remain under human control.
+It serves as the project's shared understanding and supports every AI-powered feature.
 
 ---
 
-### 3.4 Manual Testing Module
+## 5.4 Manual Testing Module
 
-Responsible for manual test design and review.
-
-Main responsibilities:
+Responsible for:
 
 * Generate AI Test Cases
-* Review generated test cases
-* Edit test cases
-* Delete test cases
-* Create manual test cases
-* Approve test cases
+* Review Test Cases
+* Edit Test Cases
+* Delete Test Cases
+* Create Manual Test Cases
+* Approve Test Cases
 
-Human review is mandatory before any test case is considered approved.
+Human approval is mandatory.
 
 ---
 
-### 3.5 Jira Integration
+## 5.5 Jira Integration
 
-Responsible for synchronization between the platform and Jira.
+Responsible for:
 
-Main responsibilities:
-
-* Connect Jira projects
+* Connect Jira
 * Import Stories
 * Link Test Cases
-* Synchronize manually with Jira
+* Manual Synchronization
 
-Synchronization is always initiated by the user to prevent overwriting reviewed work.
+Synchronization is always initiated by the user.
 
 ---
 
-### 3.6 Automation Module
+## 5.6 Automation Module
 
-Responsible for generating automation code from approved test cases.
+Responsible for:
 
-Main responsibilities:
-
-* Select approved test cases
-* Generate Playwright TypeScript automation
+* Select Approved Test Cases
+* Generate Playwright TypeScript
 * Generate Page Object Model
-* Generate assertions
-* Download automation project
+* Generate Assertions
+* Download Automation Project
 
-Automation generation is available only for approved test cases.
+Automation is generated only from approved test cases.
 
 ---
 
-### 3.7 AI Engine
+## 5.7 AI Engine
 
-Responsible for all AI-related capabilities used across the platform.
-
-Responsibilities include:
+Responsible for:
 
 * Prompt Management
 * AI Model Integration
@@ -186,15 +181,13 @@ Responsibilities include:
 * Retrieval-Augmented Generation (RAG)
 * AI Response Validation
 
-The AI Engine assists users but never replaces human decisions.
+The AI Engine assists users but never replaces them.
 
 ---
 
-### 3.8 Administration
+## 5.8 Administration
 
-Responsible for platform administration.
-
-Main responsibilities:
+Responsible for:
 
 * User Management
 * Organization Settings
@@ -204,24 +197,145 @@ Main responsibilities:
 
 ---
 
-### 3.9 Reporting (Future Release)
+## 5.9 Reporting (Future Release)
 
-This module is outside the MVP scope and will be introduced in future releases.
-
-Planned capabilities include:
+Future capabilities:
 
 * Requirement Coverage
 * Test Coverage
 * Automation Coverage
-* Team Productivity
 * AI Usage Analytics
+* Team Productivity
 * Quality Metrics
 
 ---
 
-## Module Interaction
+# 6. User Roles
 
-The expected workflow between the core modules is as follows:
+## Organization Owner
+
+Responsibilities:
+
+* Create Organization
+* Manage Subscription
+* Invite Team Members
+* Create Projects
+* Manage Organization Settings
+
+---
+
+## Administrator
+
+Responsibilities:
+
+* Manage Users
+* Assign Roles
+* Manage Projects
+* Configure Integrations
+* Manage AI Settings
+
+---
+
+## Business Analyst
+
+Responsibilities:
+
+* Create Stories
+* Import Stories
+* Run Knowledge Analysis
+* Review AI Results
+* Update Stories
+* Approve Requirements
+
+---
+
+## Manual QA Engineer
+
+Responsibilities:
+
+* Generate AI Test Cases
+* Review Test Cases
+* Edit Test Cases
+* Create Manual Test Cases
+* Approve Test Cases
+* Link Test Cases with Jira
+
+---
+
+## Automation QA Engineer
+
+Responsibilities:
+
+* View Approved Test Cases
+* Generate Playwright Automation
+* Review Automation
+* Download Automation Package
+
+---
+
+# 7. User Workflow
+
+Organization Registration
+
+↓
+
+Invite Team Members
+
+↓
+
+Create Project
+
+↓
+
+Connect Jira
+
+↓
+
+Import Stories (or Create Stories Manually)
+
+↓
+
+Build Project Knowledge Base
+
+↓
+
+Business Analyst Reviews Knowledge Analysis
+
+↓
+
+Requirement Approval
+
+↓
+
+Generate AI Test Cases
+
+↓
+
+Manual QA Review
+
+↓
+
+Approve Test Cases
+
+↓
+
+Link Test Cases with Jira
+
+↓
+
+Generate Playwright Automation
+
+↓
+
+Automation Review
+
+↓
+
+Download Automation Package
+
+---
+
+# 8. Module Interaction
 
 Organization
 
@@ -235,7 +349,11 @@ Stories
 
 ↓
 
-Knowledge Analysis
+Knowledge Base
+
+↓
+
+AI Analysis
 
 ↓
 
@@ -249,5 +367,53 @@ Jira Synchronization
 
 Automation Generation
 
-This workflow represents the primary business process of the MVP and defines the expected lifecycle of requirements as they progress from business analysis to automation.
+---
 
+# 9. Success Metrics
+
+The MVP is considered successful if it can:
+
+* Reduce manual test case creation effort by at least 50%.
+* Reduce Playwright automation generation effort.
+* Detect requirement gaps before testing begins.
+* Detect basic business conflicts between related Stories.
+* Improve collaboration between Business Analysts, Manual QA Engineers, and Automation QA Engineers.
+* Reduce QA cycle time.
+
+---
+
+# 10. Assumptions
+
+* Customers may use Jira or create Stories manually.
+* Stories are the primary business entity.
+* Human approval is mandatory.
+* AI suggestions are always editable.
+* AI never automatically overwrites user work.
+* Knowledge is built continuously as Stories are added or updated.
+
+---
+
+# 11. Out of Scope (MVP)
+
+The first commercial version will NOT include:
+
+* Test Execution
+* CI/CD Integration
+* Defect Management
+* API Automation
+* Mobile Automation
+* Performance Testing
+* Self-Healing Automation
+* AI Chat Assistant
+* Advanced Reporting
+* Enterprise SSO
+
+---
+
+# 12. Long-Term Vision
+
+The AI QA Platform will evolve into an AI-powered Quality Intelligence Platform.
+
+Instead of only generating outputs, it will understand complete software projects, continuously build project knowledge, detect business risks, improve requirement quality, generate high-quality test cases, produce automation, and assist software teams throughout the entire QA lifecycle.
+
+The long-term objective is to create one intelligent platform connecting Requirements, Knowledge, Testing, and Automation.
