@@ -135,3 +135,69 @@ Suspended
 ↓
 
 Deactivated
+
+---
+
+# Project Member
+
+## Purpose
+
+Represents a User's membership inside a specific Project.
+
+A Project Member defines what a User is allowed to do within that Project.
+
+---
+
+## Responsibilities
+
+- Connect a User to a Project.
+- Define the User's role inside the Project.
+- Control project-level access.
+- Allow the same User to have different roles in different Projects.
+
+---
+
+## Relationships
+
+- A Project Member belongs to one Project.
+- A Project Member references one User.
+- A Project has many Project Members.
+- A User can be a member of many Projects.
+
+---
+
+## Supported Project Roles
+
+- Business Analyst
+- Manual QA Engineer
+- Automation QA Engineer
+- QA Lead
+- Project Admin
+
+---
+
+## Business Rules
+
+- A User cannot access a Project unless they are a Project Member.
+- A User may have different roles in different Projects.
+- Each Project must have at least one Project Admin or QA Lead.
+- Organization Owner and Administrator can manage Project Members.
+- Project roles control what actions the User can perform inside the Project.
+
+---
+
+## Lifecycle
+
+Invited to Project
+
+↓
+
+Active
+
+↓
+
+Role Changed
+
+↓
+
+Removed
