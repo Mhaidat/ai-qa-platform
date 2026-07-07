@@ -51,3 +51,17 @@ Stories, AI Analysis, Test Cases, and Automation will all depend on project know
 Knowledge Base is not a stored entity.
 
 It is a logical view built from Knowledge Items extracted from Stories.
+
+## Decision 007 - Project-Level Roles
+
+User roles inside the platform will be project-specific.
+
+A User may have different roles across different Projects.
+
+This will be represented by a Project Member entity.
+
+Reason:
+In real QA teams, the same person may act as Manual QA in one Project, Automation QA in another Project, and QA Lead in another.
+
+Result:
+Authorization will be more flexible and closer to real-world team structures.
