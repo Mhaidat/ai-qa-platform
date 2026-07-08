@@ -163,3 +163,15 @@ This keeps the MVP simple while preserving traceability between project knowledg
 
 Result:
 The Knowledge Base remains project-level, while every Knowledge Item can still be traced back to its originating Story.
+
+## Decision 015 - Knowledge Item Relationship
+
+Knowledge Items belong to the Project, not directly to the Story.
+
+In the MVP, each Knowledge Item keeps an Origin Story reference for traceability.
+
+Reason:
+Knowledge represents project-level understanding, while the Origin Story preserves where the knowledge came from.
+
+Result:
+The Knowledge Base can evolve as a project-level concept while still maintaining traceability to Stories.
