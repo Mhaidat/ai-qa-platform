@@ -149,3 +149,17 @@ Most real-world test cases are created from a specific Story, and rare cases tha
 
 Result:
 Traceability remains simple, clear, and easy to manage.
+
+## Decision 014 - Knowledge Item Ownership
+
+In the MVP, Knowledge Items belong to a Project and have one Origin Story.
+
+A Story can produce many Knowledge Items.
+
+Future versions may introduce Knowledge Sources to allow one Knowledge Item to be linked to multiple Stories.
+
+Reason:
+This keeps the MVP simple while preserving traceability between project knowledge and the Story that produced it.
+
+Result:
+The Knowledge Base remains project-level, while every Knowledge Item can still be traced back to its originating Story.
