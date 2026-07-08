@@ -65,3 +65,37 @@ In real QA teams, the same person may act as Manual QA in one Project, Automatio
 
 Result:
 Authorization will be more flexible and closer to real-world team structures.
+
+---
+
+## Decision 008 - Organization-Level Invitations
+
+Invitations will be handled at the Organization level in the MVP.
+
+Users will first join the Organization, then Organization Owners or Administrators can assign them to Projects.
+
+Reason:
+In real companies, employees usually belong to the company first, then they are assigned to projects.
+
+Result:
+The onboarding flow remains simple and flexible.
+
+---
+
+## Decision 009 - Project Role as Enum in MVP
+
+Project roles will be implemented as fixed Enum values in the MVP.
+
+Supported roles:
+
+- Business Analyst
+- Manual QA Engineer
+- Automation QA Engineer
+- QA Lead
+- Project Admin
+
+Reason:
+Custom role and permission management adds complexity and is not required for the first commercial version.
+
+Result:
+The MVP will ship faster while keeping the design open for custom roles in future releases.
