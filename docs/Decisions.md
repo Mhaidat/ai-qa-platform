@@ -99,3 +99,15 @@ Custom role and permission management adds complexity and is not required for th
 
 Result:
 The MVP will ship faster while keeping the design open for custom roles in future releases.
+
+## Decision 010 - Project Represents a Software Product
+
+A Project represents a complete software product or platform, not a single module.
+
+Modules or functional areas are managed inside the Project.
+
+Reason:
+In real QA teams, multiple business modules usually belong to the same software product and are tested under one project context.
+
+Result:
+The Project Knowledge Base can understand the entire product and detect conflicts across different modules.
