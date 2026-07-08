@@ -6,6 +6,7 @@
 - User
 - Invitation
 - Project
+- Project Member
 - Story
 - Story Comment
 - Story Attachment
@@ -17,6 +18,10 @@
 - Jira Link
 - Automation Generation
 
+## Value Objects / Enums
+
+- Project Role
+
 ## Optional / Future Entities
 
 - Subscription
@@ -25,6 +30,8 @@
 - Release
 - AI Settings
 - Audit Log
+- Custom Project Role
+- Permission
 
 ---
 
@@ -209,41 +216,33 @@ Removed
 
 ## Purpose
 
-Represents an invitation sent to a person to join an Organization and optionally a Project.
+Represents an invitation sent to a person to join an Organization.
 
 An Invitation controls how new users join the platform and ensures secure onboarding.
-
----
 
 ## Responsibilities
 
 - Invite users to an Organization.
-- Invite users to a specific Project.
-- Assign an initial Project Role.
 - Track invitation status.
 - Allow invitation resending.
-
----
+- Allow invited users to complete registration.
 
 ## Relationships
 
 - An Invitation belongs to one Organization.
-- An Invitation may belong to one Project.
-- An Invitation may assign one Project Role.
+- An Invitation is sent to one email address.
 - An Invitation may create one User after acceptance.
-
----
 
 ## Business Rules
 
-- Invitations are sent by Organization Administrators or Owners.
+- Invitations are sent by Organization Owners or Administrators.
+- Invitations are Organization-level only in the MVP.
+- Users are assigned to Projects after joining the Organization.
 - Every invitation contains a secure unique token.
 - Invitations have an expiration date.
 - Expired invitations cannot be accepted.
 - A user cannot accept the same invitation twice.
-- If the invited email already exists, the user joins the Organization or Project after accepting the invitation.
-
----
+- If the invited email already exists, the user joins the Organization after accepting the invitation.
 
 ## Lifecycle
 
@@ -256,6 +255,8 @@ Sent
 ↓
 
 Accepted
+
+or
 
 ↓
 
