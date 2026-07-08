@@ -267,3 +267,58 @@ or
 ↓
 
 Cancelled
+
+---
+
+# Project
+
+## Purpose
+
+Represents a complete software product or platform owned by an Organization.
+
+A Project is the main workspace where users manage Stories, project knowledge, test cases, Jira integration, and automation generation.
+
+## Responsibilities
+
+- Group all work related to one software product.
+- Own Stories and requirements.
+- Own Project Members.
+- Own Jira Integration.
+- Own Knowledge Items.
+- Own Test Cases.
+- Own Automation Generations.
+
+## Relationships
+
+- A Project belongs to one Organization.
+- A Project has many Project Members.
+- A Project has many Stories.
+- A Project has many Knowledge Items.
+- A Project has one or more Jira Integrations.
+- A Project has many Test Cases through Stories.
+- A Project has many Automation Generations through approved Test Cases.
+
+## Business Rules
+
+- A Project must belong to one Organization.
+- A Project represents a software product, not a single business module.
+- Functional modules are organized inside the Project.
+- A User cannot access a Project unless they are a Project Member.
+- Every Project must have at least one Project Admin or QA Lead.
+- Project data must be isolated from other Projects.
+
+## Lifecycle
+
+Created
+
+↓
+
+Active
+
+↓
+
+Archived
+
+↓
+
+Deleted
