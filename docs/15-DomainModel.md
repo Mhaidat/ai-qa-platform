@@ -32,6 +32,7 @@
 - Audit Log
 - Custom Project Role
 - Permission
+- Knowledge Source
 
 ---
 
@@ -322,3 +323,66 @@ Archived
 ↓
 
 Deleted
+
+
+---
+
+# Knowledge Item
+
+## Purpose
+
+Represents a piece of project knowledge extracted from Stories or created during AI analysis.
+
+A Knowledge Item is part of the Project Knowledge Base.
+
+## Responsibilities
+
+- Store extracted business knowledge.
+- Support requirement analysis.
+- Support test case generation.
+- Help detect gaps, ambiguities, and conflicts.
+- Provide project context for AI operations.
+
+## Relationships
+
+- A Knowledge Item belongs to one Project.
+- In the MVP, a Knowledge Item has one Origin Story.
+- A Story may produce many Knowledge Items.
+- Future versions may allow one Knowledge Item to be linked to multiple Stories through Knowledge Sources.
+
+## Knowledge Item Types
+
+- Business Rule
+- Gap
+- Ambiguity
+- Suggested Acceptance Criteria
+- Conflict
+- Actor
+- Entity
+- Glossary Term
+
+## Business Rules
+
+- Knowledge Items are visible to users.
+- AI can create Knowledge Items.
+- Users can review Knowledge Items.
+- AI-generated Knowledge Items are not approved automatically.
+- Each Knowledge Item must be traceable to its Origin Story in the MVP.
+
+## Lifecycle
+
+Extracted
+
+↓
+
+Reviewed
+
+↓
+
+Approved
+
+or
+
+↓
+
+Rejected
