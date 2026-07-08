@@ -123,3 +123,29 @@ Versioning adds significant complexity and is not essential for the first commer
 
 Result:
 The domain remains simple while allowing future evolution.
+
+## Decision 012 - Story Source of Truth
+
+Stories imported from Jira are read-only inside the AI QA Platform.
+
+The platform may enrich imported Stories with AI Analysis, Knowledge Items, Comments, Test Cases, and Automation, but it will never modify the original Story content.
+
+Stories created inside the platform remain fully editable.
+
+Reason:
+Keeping Jira as the source of truth prevents synchronization conflicts and maintains consistency between both systems.
+
+Result:
+The platform enriches imported Stories without taking ownership of their original content.
+
+## Decision 013 - Test Case Ownership
+
+Every Test Case belongs to exactly one Story.
+
+The platform will use a one-to-many relationship between Story and Test Case.
+
+Reason:
+Most real-world test cases are created from a specific Story, and rare cases that may relate to multiple Stories can be handled by duplicating or referencing the related Story manually.
+
+Result:
+Traceability remains simple, clear, and easy to manage.
