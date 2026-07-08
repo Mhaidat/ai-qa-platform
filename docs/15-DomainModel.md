@@ -201,3 +201,68 @@ Role Changed
 ↓
 
 Removed
+
+
+---
+
+# Invitation
+
+## Purpose
+
+Represents an invitation sent to a person to join an Organization and optionally a Project.
+
+An Invitation controls how new users join the platform and ensures secure onboarding.
+
+---
+
+## Responsibilities
+
+- Invite users to an Organization.
+- Invite users to a specific Project.
+- Assign an initial Project Role.
+- Track invitation status.
+- Allow invitation resending.
+
+---
+
+## Relationships
+
+- An Invitation belongs to one Organization.
+- An Invitation may belong to one Project.
+- An Invitation may assign one Project Role.
+- An Invitation may create one User after acceptance.
+
+---
+
+## Business Rules
+
+- Invitations are sent by Organization Administrators or Owners.
+- Every invitation contains a secure unique token.
+- Invitations have an expiration date.
+- Expired invitations cannot be accepted.
+- A user cannot accept the same invitation twice.
+- If the invited email already exists, the user joins the Organization or Project after accepting the invitation.
+
+---
+
+## Lifecycle
+
+Created
+
+↓
+
+Sent
+
+↓
+
+Accepted
+
+↓
+
+Expired
+
+or
+
+↓
+
+Cancelled
