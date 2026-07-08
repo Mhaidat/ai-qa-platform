@@ -111,3 +111,15 @@ In real QA teams, multiple business modules usually belong to the same software 
 
 Result:
 The Project Knowledge Base can understand the entire product and detect conflicts across different modules.
+
+## Decision 011 - Story Versioning
+
+The MVP stores only the latest version of each Story.
+
+Future releases may introduce Story Versioning to preserve the complete history of requirement changes.
+
+Reason:
+Versioning adds significant complexity and is not essential for the first commercial release.
+
+Result:
+The domain remains simple while allowing future evolution.
