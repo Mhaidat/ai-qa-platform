@@ -168,9 +168,9 @@ A Project Member defines what a User is allowed to do within that Project.
 
 - A Project Member belongs to one Project.
 - A Project Member references one User.
+- A Project Member has one Project Role.
 - A Project has many Project Members.
 - A User can be a member of many Projects.
-
 ---
 
 ## Supported Project Roles
