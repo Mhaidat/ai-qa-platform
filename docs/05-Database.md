@@ -1555,3 +1555,80 @@ A future implementation may use:
 
 This prevents one reviewer from silently overwriting another reviewer's changes.
 
+
+---
+
+# JiraIntegrations Schema
+
+## Table
+
+`JiraIntegrations`
+
+## Purpose
+
+Stores the Jira connection and project mapping used by an AI QA Platform Project.
+
+## Columns
+
+| Column | PostgreSQL Type | Nullable | Description |
+|---|---|---:|---|
+| Id | uuid | No | Primary key |
+| ProjectId | uuid | No | AI QA Platform Project |
+| Name | varchar(200) | No | Integration display name |
+| JiraBaseUrl | varchar(1000) | No | Jira instance base URL |
+| JiraProjectId | varchar(100) | No | Jira internal project identifier |
+| JiraProjectKey | varchar(100) | No | Jira project key |
+| AuthenticationType | varchar(50) | No | Authentication method |
+| EncryptedCredential | text | No | Encrypted Jira credential or token |
+| Status | varchar(30) | No | Integration status |
+| LastSuccessfulSyncAt | timestamp with time zone | Yes | Latest successful synchronization |
+| LastSyncAttemptAt | timestamp with time zone | Yes | Latest synchronization attempt |
+| CreatedByUserId | uuid | No | User who created the Integration |
+| CreatedAt | timestamp with time zone | No | Creation timestamp |
+| UpdatedAt | timestamp with time zone | Yes | Last update timestamp |
+| DeletedAt | timestamp with time zone | Yes | Soft deletion timestamp |
+
+## Primary Key
+
+- `Id`
+
+## Foreign Keys
+
+- `ProjectId` references `Projects.Id`
+- `CreatedByUserId` references `Users.Id`
+
+## Supported Authentication Types
+
+- ApiToken
+- OAuth
+
+## Supported Statuses
+
+- Active
+- Disabled
+- ConnectionFailed
+- Deleted
+
+## Unique Constraints
+
+- `ProjectId, JiraBaseUrl, JiraProjectId` for active Integrations
+
+## Indexes
+
+- Index on `ProjectId`
+- Index on `ProjectId, Status`
+- Index on `JiraProjectKey`
+- Index on `DeletedAt`
+
+## Business Constraints
+
+- Every Jira Integration belongs to exactly one Project.
+- The Jira Integration and Project must belong to the same Organization context.
+- Jira credentials must always be encrypted at rest.
+- Credentials and tokens must never be returned through normal API responses.
+- Jira synchronization is always initiated manually in the MVP.
+- A disabled Integration cannot import or synchronize Stories.
+- Removing an Integration must not delete imported Stories, Test Cases, or historical Jira Links.
+- Connection testing must occur before an Integration becomes Active.
+- Multiple Jira Integrations may exist for one Project when needed.
+
