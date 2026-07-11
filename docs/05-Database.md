@@ -764,6 +764,9 @@ Each execution creates a separate record to preserve generation history.
 * Index on `Status`
 
 
+---
+---
+---
 # PostgreSQL Schema
 
 ## General Database Conventions
@@ -780,8 +783,6 @@ The MVP database will follow these conventions:
 * Foreign key relationships must enforce organization and project isolation through application-level authorization.
 * Sensitive values such as passwords, Jira credentials, and invitation tokens must never be stored as plain text.
 
----
----
 ---
 
 # Organizations Schema
