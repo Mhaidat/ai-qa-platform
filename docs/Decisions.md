@@ -175,3 +175,13 @@ Knowledge represents project-level understanding, while the Origin Story preserv
 
 Result:
 The Knowledge Base can evolve as a project-level concept while still maintaining traceability to Stories.
+
+## Decision 016 - Multiple Jira Integrations
+
+A Project may have more than one Jira Integration.
+
+Reason:
+A software product may use multiple Jira Projects or Jira instances, and restricting each Project to one Integration would reduce flexibility.
+
+Result:
+Stories and Jira Links must reference the specific Jira Integration from which they originated.
