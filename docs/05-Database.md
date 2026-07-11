@@ -762,3 +762,326 @@ Each execution creates a separate record to preserve generation history.
 * Index on `TestCaseId, CreatedAt`
 * Index on `RequestedByUserId`
 * Index on `Status`
+
+
+# PostgreSQL Schema
+
+## General Database Conventions
+
+The MVP database will follow these conventions:
+
+* Primary keys use PostgreSQL `uuid`.
+* Date and time fields use `timestamp with time zone`.
+* Enum values are initially stored as `varchar`.
+* Table names use plural PascalCase in documentation.
+* Entity Framework Core will generate the final PostgreSQL naming convention.
+* Soft-deleted records use a nullable `DeletedAt` column.
+* All tenant-owned records must include or be traceable to an `OrganizationId`.
+* Foreign key relationships must enforce organization and project isolation through application-level authorization.
+* Sensitive values such as passwords, Jira credentials, and invitation tokens must never be stored as plain text.
+
+---
+---
+---
+
+# Organizations Schema
+
+## Table
+
+`Organizations`
+
+## Columns
+
+| Column      | PostgreSQL Type          | Nullable | Description                             |
+| ----------- | ------------------------ | -------: | --------------------------------------- |
+| Id          | uuid                     |       No | Primary key                             |
+| Name        | varchar(200)             |       No | Organization display name               |
+| Slug        | varchar(100)             |       No | URL-safe unique organization identifier |
+| Status      | varchar(30)              |       No | Organization lifecycle status           |
+| CreatedAt   | timestamp with time zone |       No | Creation timestamp                      |
+| UpdatedAt   | timestamp with time zone |      Yes | Last update timestamp                   |
+| SuspendedAt | timestamp with time zone |      Yes | Suspension timestamp                    |
+| DeletedAt   | timestamp with time zone |      Yes | Soft deletion timestamp                 |
+
+## Primary Key
+
+* `Id`
+
+## Unique Constraints
+
+* `Slug`
+
+## Supported Statuses
+
+* Active
+* Suspended
+* Deleted
+
+## Indexes
+
+* Unique index on `Slug`
+* Index on `Status`
+* Index on `DeletedAt`
+
+## Business Constraints
+
+* Organization name is required.
+* Organization Slug must be globally unique.
+* Deleted Organizations cannot create new Projects or invite Users.
+* Suspended Organizations retain their data but cannot perform write operations.
+
+---
+
+# Users Schema
+
+## Table
+
+`Users`
+
+## Columns
+
+| Column           | PostgreSQL Type          | Nullable | Description                            |
+| ---------------- | ------------------------ | -------: | -------------------------------------- |
+| Id               | uuid                     |       No | Primary key                            |
+| OrganizationId   | uuid                     |       No | Owning Organization                    |
+| FullName         | varchar(200)             |       No | User display name                      |
+| Email            | varchar(320)             |       No | User email address                     |
+| NormalizedEmail  | varchar(320)             |       No | Email used for case-insensitive lookup |
+| PasswordHash     | text                     |       No | Secure password hash                   |
+| OrganizationRole | varchar(30)              |       No | Organization-level role                |
+| Status           | varchar(30)              |       No | User lifecycle status                  |
+| EmailConfirmedAt | timestamp with time zone |      Yes | Email confirmation timestamp           |
+| LastLoginAt      | timestamp with time zone |      Yes | Last successful login                  |
+| CreatedAt        | timestamp with time zone |       No | Creation timestamp                     |
+| UpdatedAt        | timestamp with time zone |      Yes | Last update timestamp                  |
+| SuspendedAt      | timestamp with time zone |      Yes | Suspension timestamp                   |
+| DeactivatedAt    | timestamp with time zone |      Yes | Deactivation timestamp                 |
+
+## Primary Key
+
+* `Id`
+
+## Foreign Keys
+
+* `OrganizationId` references `Organizations.Id`
+
+## Supported Organization Roles
+
+* Owner
+* Administrator
+* Member
+
+## Supported Statuses
+
+* Pending
+* Active
+* Suspended
+* Deactivated
+
+## Unique Constraints
+
+For the MVP:
+
+* `NormalizedEmail` is globally unique.
+
+This means one email address can belong to only one Organization in the MVP.
+
+## Indexes
+
+* Unique index on `NormalizedEmail`
+* Index on `OrganizationId`
+* Index on `OrganizationId, Status`
+
+## Business Constraints
+
+* Every User belongs to exactly one Organization.
+* Every Organization must have at least one Owner.
+* A User cannot access data from another Organization.
+* Project responsibilities are not stored in `OrganizationRole`.
+* Project-level roles are stored in `ProjectMembers`.
+* Email comparisons must be case-insensitive.
+* PasswordHash must be generated using ASP.NET Core Identity or another approved secure password-hashing mechanism.
+
+---
+
+# Invitations Schema
+
+## Table
+
+`Invitations`
+
+## Columns
+
+| Column          | PostgreSQL Type          | Nullable | Description                           |
+| --------------- | ------------------------ | -------: | ------------------------------------- |
+| Id              | uuid                     |       No | Primary key                           |
+| OrganizationId  | uuid                     |       No | Organization receiving the new member |
+| Email           | varchar(320)             |       No | Invited email address                 |
+| NormalizedEmail | varchar(320)             |       No | Case-insensitive email value          |
+| TokenHash       | varchar(500)             |       No | Secure hash of invitation token       |
+| Status          | varchar(30)              |       No | Invitation lifecycle status           |
+| InvitedByUserId | uuid                     |       No | User who created the invitation       |
+| ExpiresAt       | timestamp with time zone |       No | Expiration timestamp                  |
+| AcceptedAt      | timestamp with time zone |      Yes | Acceptance timestamp                  |
+| CancelledAt     | timestamp with time zone |      Yes | Cancellation timestamp                |
+| CreatedAt       | timestamp with time zone |       No | Creation timestamp                    |
+| UpdatedAt       | timestamp with time zone |      Yes | Last update timestamp                 |
+
+## Primary Key
+
+* `Id`
+
+## Foreign Keys
+
+* `OrganizationId` references `Organizations.Id`
+* `InvitedByUserId` references `Users.Id`
+
+## Supported Statuses
+
+* Created
+* Sent
+* Accepted
+* Expired
+* Cancelled
+
+## Indexes
+
+* Index on `OrganizationId`
+* Index on `NormalizedEmail`
+* Index on `Status`
+* Index on `ExpiresAt`
+* Unique filtered index on `OrganizationId, NormalizedEmail` for active invitations
+
+## Business Constraints
+
+* Invitations are Organization-level only in the MVP.
+* Only Organization Owners and Administrators can invite Users.
+* Raw invitation tokens must never be stored.
+* Accepted, expired, or cancelled invitations cannot be reused.
+* The invited email must match the email used during invitation acceptance.
+* Only one active invitation may exist for the same email and Organization.
+* A User is assigned to Projects only after joining the Organization.
+
+---
+
+# Projects Schema
+
+## Table
+
+`Projects`
+
+## Columns
+
+| Column          | PostgreSQL Type          | Nullable | Description                             |
+| --------------- | ------------------------ | -------: | --------------------------------------- |
+| Id              | uuid                     |       No | Primary key                             |
+| OrganizationId  | uuid                     |       No | Owning Organization                     |
+| Name            | varchar(200)             |       No | Project display name                    |
+| Slug            | varchar(100)             |       No | Organization-scoped URL-safe identifier |
+| Description     | varchar(2000)            |      Yes | Project description                     |
+| Status          | varchar(30)              |       No | Project lifecycle status                |
+| CreatedByUserId | uuid                     |       No | User who created the Project            |
+| CreatedAt       | timestamp with time zone |       No | Creation timestamp                      |
+| UpdatedAt       | timestamp with time zone |      Yes | Last update timestamp                   |
+| ArchivedAt      | timestamp with time zone |      Yes | Archive timestamp                       |
+| DeletedAt       | timestamp with time zone |      Yes | Soft deletion timestamp                 |
+
+## Primary Key
+
+* `Id`
+
+## Foreign Keys
+
+* `OrganizationId` references `Organizations.Id`
+* `CreatedByUserId` references `Users.Id`
+
+## Supported Statuses
+
+* Active
+* Archived
+* Deleted
+
+## Unique Constraints
+
+* `OrganizationId, Slug`
+
+## Indexes
+
+* Index on `OrganizationId`
+* Index on `OrganizationId, Status`
+* Unique index on `OrganizationId, Slug`
+* Index on `DeletedAt`
+
+## Business Constraints
+
+* Every Project belongs to exactly one Organization.
+* A Project represents a complete software product or platform.
+* Business modules exist inside the Project and do not require separate Projects.
+* Archived Projects are read-only.
+* Deleted Projects use soft deletion.
+* A Project must have at least one Project Admin.
+
+---
+
+# ProjectMembers Schema
+
+## Table
+
+`ProjectMembers`
+
+## Columns
+
+| Column    | PostgreSQL Type          | Nullable | Description                     |
+| --------- | ------------------------ | -------: | ------------------------------- |
+| Id        | uuid                     |       No | Primary key                     |
+| ProjectId | uuid                     |       No | Project membership              |
+| UserId    | uuid                     |       No | Organization User               |
+| Role      | varchar(50)              |       No | User's role inside the Project  |
+| Status    | varchar(30)              |       No | Membership lifecycle status     |
+| JoinedAt  | timestamp with time zone |       No | Membership activation timestamp |
+| RemovedAt | timestamp with time zone |      Yes | Membership removal timestamp    |
+| CreatedAt | timestamp with time zone |       No | Creation timestamp              |
+| UpdatedAt | timestamp with time zone |      Yes | Last update timestamp           |
+
+## Primary Key
+
+* `Id`
+
+## Foreign Keys
+
+* `ProjectId` references `Projects.Id`
+* `UserId` references `Users.Id`
+
+## Supported Roles
+
+* ProjectAdmin
+* BusinessAnalyst
+* ManualQAEngineer
+* AutomationQAEngineer
+* QALead
+
+## Supported Statuses
+
+* Active
+* Removed
+
+## Unique Constraints
+
+* `ProjectId, UserId`
+
+## Indexes
+
+* Unique index on `ProjectId, UserId`
+* Index on `UserId`
+* Index on `ProjectId, Role`
+* Index on `ProjectId, Status`
+
+## Business Constraints
+
+* A User cannot access a Project unless an active Project Member record exists.
+* The User and Project must belong to the same Organization.
+* A User may have a different Role in each Project.
+* Each Project must have at least one active `ProjectAdmin`.
+* Removing a Project Member does not delete their historical contributions.
+* Project Role is implemented as an Enum in the MVP.
+
