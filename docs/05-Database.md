@@ -1086,3 +1086,472 @@ This means one email address can belong to only one Organization in the MVP.
 * Removing a Project Member does not delete their historical contributions.
 * Project Role is implemented as an Enum in the MVP.
 
+
+
+---
+---
+---
+---
+# Stories Schema
+
+## Table
+
+`Stories`
+
+## Columns
+
+| Column             | PostgreSQL Type          | Nullable | Description                               |
+| ------------------ | ------------------------ | -------: | ----------------------------------------- |
+| Id                 | uuid                     |       No | Primary key                               |
+| ProjectId          | uuid                     |       No | Owning Project                            |
+| JiraIntegrationId  | uuid                     |      Yes | Jira integration used to import the Story |
+| Source             | varchar(30)              |       No | Story source                              |
+| ExternalId         | varchar(100)             |      Yes | Jira internal issue identifier            |
+| ExternalKey        | varchar(100)             |      Yes | Jira issue key, such as `PROJ-125`        |
+| Title              | varchar(500)             |       No | Story title                               |
+| Description        | text                     |      Yes | Requirement description                   |
+| AcceptanceCriteria | text                     |      Yes | Acceptance criteria                       |
+| Priority           | varchar(30)              |      Yes | Requirement priority                      |
+| WorkflowStatus     | varchar(50)              |       No | Internal platform workflow status         |
+| ExternalStatus     | varchar(100)             |      Yes | Jira workflow status                      |
+| EpicKey            | varchar(100)             |      Yes | Optional Jira Epic key                    |
+| EpicName           | varchar(500)             |      Yes | Optional Epic name                        |
+| SprintName         | varchar(300)             |      Yes | Optional Sprint name                      |
+| ReleaseName        | varchar(300)             |      Yes | Optional Release name or fix version      |
+| Labels             | jsonb                    |      Yes | Jira or platform labels                   |
+| CreatedByUserId    | uuid                     |      Yes | User who manually created the Story       |
+| ApprovedByUserId   | uuid                     |      Yes | Business Analyst who approved it          |
+| ApprovedAt         | timestamp with time zone |      Yes | Approval timestamp                        |
+| ExternalCreatedAt  | timestamp with time zone |      Yes | Original Jira creation timestamp          |
+| ExternalUpdatedAt  | timestamp with time zone |      Yes | Latest Jira update timestamp              |
+| LastSyncedAt       | timestamp with time zone |      Yes | Latest successful Jira synchronization    |
+| CreatedAt          | timestamp with time zone |       No | Platform creation timestamp               |
+| UpdatedAt          | timestamp with time zone |      Yes | Platform update timestamp                 |
+| ArchivedAt         | timestamp with time zone |      Yes | Archive timestamp                         |
+| DeletedAt          | timestamp with time zone |      Yes | Soft deletion timestamp                   |
+
+## Primary Key
+
+* `Id`
+
+## Foreign Keys
+
+* `ProjectId` references `Projects.Id`
+* `JiraIntegrationId` references `JiraIntegrations.Id`
+* `CreatedByUserId` references `Users.Id`
+* `ApprovedByUserId` references `Users.Id`
+
+## Supported Sources
+
+* Manual
+* Jira
+
+## Supported Workflow Statuses
+
+* Draft
+* ReadyForAnalysis
+* UnderBusinessReview
+* Approved
+* Rejected
+* Archived
+
+## Supported Priorities
+
+* Lowest
+* Low
+* Medium
+* High
+* Highest
+* Critical
+
+## Unique Constraints
+
+For Jira-imported Stories:
+
+* `JiraIntegrationId, ExternalId`
+* `JiraIntegrationId, ExternalKey`
+
+These constraints apply only when the external values are not null and the Story is not soft-deleted.
+
+## Indexes
+
+* Index on `ProjectId`
+* Index on `ProjectId, WorkflowStatus`
+* Index on `ProjectId, Source`
+* Index on `JiraIntegrationId`
+* Index on `ExternalKey`
+* Index on `ApprovedByUserId`
+* Index on `LastSyncedAt`
+* Index on `DeletedAt`
+* GIN index on `Labels`
+
+## Business Constraints
+
+* Every Story belongs to exactly one Project.
+* A manually created Story must reference `CreatedByUserId`.
+* A Jira-imported Story must reference `JiraIntegrationId`.
+* Jira-imported Story content is read-only inside the platform.
+* Manual Stories can be edited by authorized Project Members.
+* Jira changes are applied only through user-initiated synchronization.
+* Approval requires an active Project Member with the Business Analyst, QA Lead, or Project Admin role.
+* An approved Story becomes available for Test Case generation.
+* Epics, Sprints, and Releases remain optional.
+* The MVP stores the latest synchronized Jira content only.
+* Soft-deleted Stories are excluded from active workflows.
+
+---
+
+# StoryComments Schema
+
+## Table
+
+`StoryComments`
+
+## Columns
+
+| Column            | PostgreSQL Type          | Nullable | Description                           |
+| ----------------- | ------------------------ | -------: | ------------------------------------- |
+| Id                | uuid                     |       No | Primary key                           |
+| StoryId           | uuid                     |       No | Owning Story                          |
+| Source            | varchar(30)              |       No | Comment source                        |
+| ExternalId        | varchar(150)             |      Yes | Jira comment identifier               |
+| Content           | text                     |       No | Comment content                       |
+| AuthorDisplayName | varchar(300)             |      Yes | External author display name          |
+| CreatedByUserId   | uuid                     |      Yes | Platform User who created the Comment |
+| ExternalCreatedAt | timestamp with time zone |      Yes | Jira creation timestamp               |
+| ExternalUpdatedAt | timestamp with time zone |      Yes | Jira update timestamp                 |
+| CreatedAt         | timestamp with time zone |       No | Platform creation timestamp           |
+| UpdatedAt         | timestamp with time zone |      Yes | Platform update timestamp             |
+| DeletedAt         | timestamp with time zone |      Yes | Soft deletion timestamp               |
+
+## Primary Key
+
+* `Id`
+
+## Foreign Keys
+
+* `StoryId` references `Stories.Id`
+* `CreatedByUserId` references `Users.Id`
+
+## Supported Sources
+
+* Platform
+* Jira
+
+## Unique Constraints
+
+* `StoryId, ExternalId` when `ExternalId` is not null and `DeletedAt` is null
+
+## Indexes
+
+* Index on `StoryId`
+* Index on `StoryId, Source`
+* Index on `CreatedByUserId`
+* Index on `DeletedAt`
+
+## Business Constraints
+
+* Jira comments are read-only inside the platform.
+* Platform comments can be edited by their creator or an authorized Project Member.
+* Platform-created comments require `CreatedByUserId`.
+* Jira comments require `ExternalId`.
+* Imported Jira comments must not be duplicated during synchronization.
+* Comments may be included in the Project Context used during AI analysis.
+* Deleting a Story must not physically delete Comments immediately; soft deletion or controlled cascading must preserve auditability.
+
+---
+
+# StoryAttachments Schema
+
+## Table
+
+`StoryAttachments`
+
+## Columns
+
+| Column            | PostgreSQL Type          | Nullable | Description                         |
+| ----------------- | ------------------------ | -------: | ----------------------------------- |
+| Id                | uuid                     |       No | Primary key                         |
+| StoryId           | uuid                     |       No | Owning Story                        |
+| Source            | varchar(30)              |       No | Attachment source                   |
+| ExternalId        | varchar(150)             |      Yes | Jira attachment identifier          |
+| FileName          | varchar(500)             |       No | Original file name                  |
+| ContentType       | varchar(200)             |      Yes | MIME content type                   |
+| FileSizeBytes     | bigint                   |      Yes | File size in bytes                  |
+| StorageProvider   | varchar(50)              |      Yes | Storage provider name               |
+| StoragePath       | text                     |      Yes | Internal storage location           |
+| ExternalUrl       | text                     |      Yes | Jira attachment URL                 |
+| UploadedByUserId  | uuid                     |      Yes | Platform User who uploaded the file |
+| ExternalCreatedAt | timestamp with time zone |      Yes | Jira attachment timestamp           |
+| CreatedAt         | timestamp with time zone |       No | Platform creation timestamp         |
+| DeletedAt         | timestamp with time zone |      Yes | Soft deletion timestamp             |
+
+## Primary Key
+
+* `Id`
+
+## Foreign Keys
+
+* `StoryId` references `Stories.Id`
+* `UploadedByUserId` references `Users.Id`
+
+## Supported Sources
+
+* Platform
+* Jira
+
+## Unique Constraints
+
+* `StoryId, ExternalId` when `ExternalId` is not null and `DeletedAt` is null
+
+## Indexes
+
+* Index on `StoryId`
+* Index on `StoryId, Source`
+* Index on `UploadedByUserId`
+* Index on `DeletedAt`
+
+## Business Constraints
+
+* The database stores attachment metadata only.
+* File contents are stored outside PostgreSQL.
+* Platform attachments require a valid internal `StoragePath`.
+* Jira attachments may use `ExternalUrl` without copying the file in the MVP.
+* Files must be validated by type and size before storage.
+* Access to attachments must be authorized through the Story's Project and Organization.
+* Jira attachment URLs and credentials must not be exposed to unauthorized users.
+
+---
+
+# AIAnalyses Schema
+
+## Table
+
+`AIAnalyses`
+
+## Columns
+
+| Column              | PostgreSQL Type          | Nullable | Description                        |
+| ------------------- | ------------------------ | -------: | ---------------------------------- |
+| Id                  | uuid                     |       No | Primary key                        |
+| StoryId             | uuid                     |       No | Analyzed Story                     |
+| RequestedByUserId   | uuid                     |       No | User who requested the Analysis    |
+| Status              | varchar(30)              |       No | Execution status                   |
+| ModelProvider       | varchar(100)             |       No | AI provider                        |
+| ModelName           | varchar(150)             |       No | Model identifier                   |
+| PromptVersion       | varchar(50)              |       No | Prompt template version            |
+| ContextStrategy     | varchar(50)              |       No | Context retrieval strategy         |
+| RelatedStoriesCount | integer                  |       No | Number of related Stories supplied |
+| InputTokenCount     | integer                  |      Yes | Input tokens consumed              |
+| OutputTokenCount    | integer                  |      Yes | Output tokens consumed             |
+| EstimatedCost       | numeric(18,6)            |      Yes | Estimated provider cost            |
+| ErrorCode           | varchar(100)             |      Yes | Structured failure code            |
+| ErrorMessage        | text                     |      Yes | Failure details                    |
+| StartedAt           | timestamp with time zone |      Yes | Execution start                    |
+| CompletedAt         | timestamp with time zone |      Yes | Execution completion               |
+| CreatedAt           | timestamp with time zone |       No | Record creation timestamp          |
+
+## Primary Key
+
+* `Id`
+
+## Foreign Keys
+
+* `StoryId` references `Stories.Id`
+* `RequestedByUserId` references `Users.Id`
+
+## Supported Statuses
+
+* Pending
+* Processing
+* Completed
+* Failed
+* Cancelled
+
+## Supported Context Strategies
+
+* StoryOnly
+* RelatedStories
+* ProjectKnowledgeRag
+
+The expected MVP strategy is `ProjectKnowledgeRag`.
+
+## Indexes
+
+* Index on `StoryId`
+* Index on `StoryId, CreatedAt`
+* Index on `RequestedByUserId`
+* Index on `Status`
+* Index on `CreatedAt`
+
+## Business Constraints
+
+* Every AI Analysis belongs to exactly one Story.
+* Every execution creates a new record.
+* Previous Analyses must not be overwritten.
+* Only active Project Members with an authorized role can request an Analysis.
+* The requesting User and Story must belong to the same Organization.
+* AI Analysis does not change or approve Story content automatically.
+* Failed Analyses remain stored for troubleshooting.
+* Token and estimated cost information should be recorded when provided by the AI provider.
+* Sensitive complete prompts should not be stored by default.
+* Generated AI output must pass structural validation before Knowledge Items are created.
+* A completed Analysis may generate zero or more Knowledge Items.
+
+---
+
+# KnowledgeItems Schema
+
+## Table
+
+`KnowledgeItems`
+
+## Columns
+
+| Column           | PostgreSQL Type          | Nullable | Description                            |
+| ---------------- | ------------------------ | -------: | -------------------------------------- |
+| Id               | uuid                     |       No | Primary key                            |
+| ProjectId        | uuid                     |       No | Owning Project                         |
+| OriginStoryId    | uuid                     |       No | Story that produced the Knowledge Item |
+| AIAnalysisId     | uuid                     |      Yes | AI Analysis that extracted it          |
+| Type             | varchar(50)              |       No | Knowledge classification               |
+| Title            | varchar(500)             |       No | Short human-readable title             |
+| Content          | text                     |       No | Knowledge content                      |
+| Status           | varchar(30)              |       No | Human review status                    |
+| ConfidenceScore  | numeric(5,4)             |      Yes | AI confidence from 0 to 1              |
+| Source           | varchar(30)              |       No | AI or User                             |
+| ReviewedByUserId | uuid                     |      Yes | User who reviewed the item             |
+| ReviewedAt       | timestamp with time zone |      Yes | Review timestamp                       |
+| CreatedByUserId  | uuid                     |      Yes | User who manually created it           |
+| CreatedAt        | timestamp with time zone |       No | Creation timestamp                     |
+| UpdatedAt        | timestamp with time zone |      Yes | Last update timestamp                  |
+| SupersededAt     | timestamp with time zone |      Yes | Timestamp when replaced                |
+| DeletedAt        | timestamp with time zone |      Yes | Soft deletion timestamp                |
+| Embedding        | vector                   |      Yes | Semantic-search embedding              |
+
+## Embedding Dimension
+
+The exact dimension must match the selected embedding model.
+
+It should be configured through the AI infrastructure layer rather than being treated as a permanent business rule.
+
+Example:
+
+```sql
+Embedding vector(1536)
+```
+
+The example dimension must be updated if a different embedding model is selected.
+
+## Primary Key
+
+* `Id`
+
+## Foreign Keys
+
+* `ProjectId` references `Projects.Id`
+* `OriginStoryId` references `Stories.Id`
+* `AIAnalysisId` references `AIAnalyses.Id`
+* `ReviewedByUserId` references `Users.Id`
+* `CreatedByUserId` references `Users.Id`
+
+## Supported Types
+
+* BusinessRule
+* Gap
+* Ambiguity
+* SuggestedAcceptanceCriteria
+* Conflict
+* Actor
+* Entity
+* GlossaryTerm
+
+## Supported Statuses
+
+* Extracted
+* UnderReview
+* Approved
+* Rejected
+* Superseded
+
+## Supported Sources
+
+* AI
+* User
+
+## Indexes
+
+* Index on `ProjectId`
+* Index on `OriginStoryId`
+* Index on `AIAnalysisId`
+* Index on `ProjectId, Type`
+* Index on `ProjectId, Status`
+* Index on `ReviewedByUserId`
+* Index on `DeletedAt`
+* Vector similarity index on `Embedding`
+
+## Vector Index Strategy
+
+For the MVP, use one of the pgvector-supported approximate indexes after sufficient data exists:
+
+* HNSW
+* IVFFlat
+
+HNSW is the preferred initial option when supported by the selected PostgreSQL and pgvector versions.
+
+Do not create an approximate vector index prematurely on an empty or very small dataset without validating its operational value.
+
+## Business Constraints
+
+* Every Knowledge Item belongs to exactly one Project.
+* Every Knowledge Item has exactly one Origin Story in the MVP.
+* The Origin Story and Knowledge Item must belong to the same Project.
+* AI-generated Knowledge Items reference an `AIAnalysisId`.
+* Manually created Knowledge Items reference `CreatedByUserId`.
+* AI-generated Knowledge Items are never auto-approved.
+* Only authorized Project Members can review Knowledge Items.
+* `ConfidenceScore`, when present, must be between 0 and 1.
+* Rejected Items remain stored for traceability.
+* Superseded Items remain available but are excluded from active Knowledge retrieval.
+* Only approved Knowledge Items should be treated as trusted Project Knowledge.
+* Under-review Items may be shown to users but must be marked clearly.
+* Embeddings must be regenerated when the searchable Knowledge content changes.
+* Semantic similarity must assist users and AI retrieval, not automatically determine business truth.
+
+---
+
+# Story and Knowledge Referential Rules
+
+## Deletion Behavior
+
+* Deleting an Organization must be restricted and handled through controlled tenant deactivation.
+* Deleting a Project uses soft deletion.
+* Deleting a Story uses soft deletion.
+* Story Comments and Attachments should remain traceable after Story archival or soft deletion.
+* AI Analyses must not be physically deleted when a Story changes.
+* Knowledge Items must not be automatically deleted when the Origin Story is archived.
+* A Knowledge Item may instead be marked `Superseded` or `Rejected` after review.
+
+## Tenant Isolation
+
+Every query for these tables must be scoped through:
+
+```text
+Organization
+→ Project
+→ Story / Knowledge Item
+```
+
+A record identifier alone must never be considered sufficient authorization.
+
+## Concurrency
+
+Stories and Knowledge Items should support optimistic concurrency through an EF Core concurrency token.
+
+A future implementation may use:
+
+* PostgreSQL `xmin`
+* An application-managed version column
+
+This prevents one reviewer from silently overwriting another reviewer's changes.
+
