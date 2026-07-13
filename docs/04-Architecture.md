@@ -325,39 +325,54 @@ Automation Generation
 
 # 7. Technology Stack (MVP)
 
-Backend
+## Backend
 
 * ASP.NET Core
-* Entity Framework Core
+* Entity Framework Core (Code First)
 * Clean Architecture
+* Domain-Driven Design (DDD)
+* JWT Authentication
 
-Database
+---
+
+## Database
 
 * PostgreSQL
 * pgvector
 
-Frontend
+---
 
-* Angular
+## Frontend
 
-Authentication
+* React 19
+* TypeScript
+* Vite
+* Tailwind CSS
+* shadcn/ui
+* Zustand
+* TanStack Query
+* React Hook Form
 
-* JWT
+---
 
-AI
+## AI
 
-* OpenAI (initial provider)
-* Retrieval-Augmented Generation (RAG)
+* OpenAI-Compatible APIs
 * Embeddings
+* Retrieval-Augmented Generation (RAG)
 
-Automation
+---
 
-* Playwright TypeScript
+## Automation
 
-Integrations
+* Playwright
+* TypeScript
 
-* Jira
+---
 
+## Integrations
+
+* Jira Cloud
 ---
 
 # 8. Future Architectural Evolution
@@ -372,5 +387,20 @@ Future versions may introduce:
 * Object Storage
 * Event-Driven Architecture
 * Microservices (if required)
+
+# 8. Future Architectural Evolution
+
+Future versions may introduce:
+
+* Multi-LLM Support
+* Knowledge Graph
+* Local AI Models
+* Redis
+* Object Storage (S3 / Azure Blob)
+* Background Job Processing
+* Event-Driven Architecture
+* Microservices (only if justified by scale)
+
+The MVP will remain a modular monolith to simplify development, deployment, testing, and maintenance.
 
 The MVP will remain a modular monolithic architecture to simplify development, deployment, and maintenance.
